@@ -13,12 +13,12 @@ module Accessors
         define_method("#{name}=".to_sym) do |value|
           old_value = instance_variable_get(var_name)
           instance_variable_set(var_name, value)
+          history = instance_variable_get(history_var_name)
 
-          if old_value != value
-            instance_variable_set(history_var_name, []) if instance_variable_get(history_var_name).nil?
-            history = instance_variable_get(history_var_name)
-            history << value
-            instance_variable_set(history_var_name, history)
+          if history.nil?
+            instance_variable_set(history_var_name, [])
+          else
+            history << old_value
           end
         end
 

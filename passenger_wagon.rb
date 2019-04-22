@@ -4,6 +4,9 @@ class PassengerWagon < Wagon
   include Validation
 
   SIZE_LIMIT_ERROR = 'Недостаточно свободных мест'.freeze
+  SIZE_ERROR = 'Общее количество мест должно быть положительным числом'.freeze
+
+  validate :size, :format, /^[1-9]{1}[0-9]*$/, SIZE_ERROR
 
   alias take_a_seat reserve_space
 
@@ -15,7 +18,3 @@ class PassengerWagon < Wagon
     SIZE_LIMIT_ERROR
   end
 end
-
-size_error = 'Общее количество мест должно быть положительным числом'
-
-PassengerWagon.validate(:size, :format, /^[1-9]{1}[0-9]*$/, size_error)

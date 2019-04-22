@@ -8,6 +8,8 @@ class Wagon
 
   attr_reader :size, :reserved_space
 
+  strong_attr_accessor :train, Train
+
   def initialize(size)
     @size = size
     @reserved_space = 0
@@ -30,8 +32,6 @@ class Wagon
     end
   end
 
-  protected
-
   def wagon_number
     return if train.nil?
 
@@ -47,5 +47,3 @@ class Wagon
     @reserved_space += delta
   end
 end
-
-Wagon.strong_attr_accessor(:train, Train)

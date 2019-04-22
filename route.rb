@@ -10,6 +10,9 @@ class Route
 
   SAME_STATIONS = 'Начальные и конечные станции не должны совпадать'.freeze
 
+  validate :start, :type, Station, 'Неверный тип начальной станции'
+  validate :finish, :type, Station, 'Неверный тип конечной станции'
+
   def initialize(start, finish)
     @stations = [start, finish]
     @start = start
@@ -36,6 +39,3 @@ class Route
     "#{start_name}-#{finish_name}, станций: #{stations.size}"
   end
 end
-
-Route.validate(:start, :type, Station, 'Неверный тип начальной станции')
-Route.validate(:finish, :type, Station, 'Неверный тип конечной станции')

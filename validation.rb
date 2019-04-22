@@ -14,11 +14,11 @@ module Validation
     end
 
     def validate(name, validation_type, *args)
-      cur_validations = validations
-      cur_validations << { name: name,
-                           validation_type: validation_type,
-                           args: args }
-      @validations = cur_validations
+      validations << {
+        name: name,
+        validation_type: validation_type,
+        args: args
+      }
     end
   end
 
@@ -26,13 +26,9 @@ module Validation
     def validate!
       self.class.validations.each do |validation|
         validation_type = validation[:validation_type]
-        if validation_type == :presence
-          check_presence(validation[:name], validation[:args])
-        elsif validation_type == :format
-          check_format(validation[:name], validation[:args])
-        elsif validation_type == :type
-          check_type(validation[:name], validation[:args])
-        end
+        checked_attr = validation[:name]
+        method_name = "check_#{validation_type}".to_sym
+        send method_name, checked_attr.to_s, send(checked_attr), validation[:args]
       end
     end
 
@@ -45,19 +41,20 @@ module Validation
 
     private
 
-    def check_presence(name, args)
-      text_error = args[0] || "Не заполнено значение атрибута \'#{name}\'"
-      raise text_error if send(name).nil? || send(name) == ''
+    def check_presence(attr_name, value, args)
+      text_error = args[0] || "Не заполнено значение атрибута \'#{attr_name}\'"
+      raise text_error if value.nil? || value == ''
     end
 
-    def check_format(name, args)
-      text_error = args[1] || "Значение атрибута \'#{name}\' не соответствует формату"
-      raise text_error if send(name).to_s !~ args[0]
+    def check_format(attr_name, value, args)
+      text_error = args[1] || "Значение атрибута \'#{attr_name}\' не соответствует формату"
+      raise text_error if value.to_s !~ args[0]
     end
 
-    def check_type(name, args)
-      text_error = args[1] || "Значение атрибута \'#{name}\' не соответствует классу \'#{type}\'"
-      raise text_error unless send(name).is_a?(args[0])
+    def check_type(attr_name, value, args)
+      type = args[0]
+      text_error = args[1] || "Значение атрибута \'#{attr_name}\' не соответствует классу \'#{type}\'"
+      raise text_error unless value.is_a?(args[0])
     end
   end
 end

@@ -7,6 +7,8 @@ class Station
 
   attr_reader :name, :trains
 
+  validate :name, :presence
+
   @@instances = []
 
   def self.all
@@ -47,5 +49,3 @@ class Station
     trains.select { |train| train.type == type }
   end
 end
-
-Station.validate(:name, :presence)

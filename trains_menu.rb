@@ -58,7 +58,7 @@ module TrainsMenu
     begin
       wagon.fill_space(volume)
       true
-    rescue StandardError
+    rescue StandardError => e
       puts "ОШИБКА: \"#{e.message}\""
       false
     end
@@ -68,9 +68,9 @@ module TrainsMenu
     puts 'Введите занимаемое количество мест'
     number_of_seats = gets.to_i
     begin
-      number_of_seats.times { wagon.take_a_seat }
+      number_of_seats.times { wagon.take_a_seat(1) }
       true
-    rescue StandardError
+    rescue StandardError => e
       puts "ОШИБКА: \"#{e.message}\""
       false
     end
